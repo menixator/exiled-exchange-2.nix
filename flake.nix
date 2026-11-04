@@ -77,7 +77,7 @@
             env.ELECTRON_OVERRIDE_DIST_PATH = "${pkgs.electron}/bin";
             env.NIX_CFLAGS_COMPILE = "-Wno-error=incompatible-pointer-types";
 
-            env.dontPatchShebangs=1;
+            env.dontPatchShebangs = 1;
             nativeBuildInputs = [ pkgs.makeWrapper ];
             buildInputs = [
               pkgs.electron
@@ -85,7 +85,16 @@
               pkgs.libx11
               pkgs.libxcb
             ];
-            
+            desktopItems = [
+              (pkgs.makeDesktopItem {
+                name = "Exiled Exchange 2";
+                exec = "exiled-exchange-2";
+                icon = "exiled-exchange-2";
+                desktopName = "Exiled Exchange 2";
+                comment = "Path of Exile 2 trade overlay";
+                terminal = false;
+              })
+            ];
 
             #- "package.json"
             #- from: "dist"
@@ -106,7 +115,7 @@
                  --replace-fail '"main": "dist/main.js"' '"main": "main.js"' 
                cp package.json "$outdir" 
 
-               cp -r ${renderer}/. "$outdir/" 
+               cp -r ${renderer}/. "$outdir/"
 
               cp -r node_modules "$outdir/" 
 
@@ -118,6 +127,8 @@
                  --add-flags "--ozone-platform=x11" \
                  --add-flags "--disable-gpu-sandbox" \
                  --prefix LD_LIBRARY_PATH : "${libPaths}" 
+              # icon
+              install -Dm644 ${renderer}/icon.png "$out/share/icons/hicolor/256x256/apps/exiled-exchange-2.png"  
                runHook postInstall 
             '';
           };
