@@ -78,7 +78,7 @@
             env.NIX_CFLAGS_COMPILE = "-Wno-error=incompatible-pointer-types";
 
             env.dontPatchShebangs = 1;
-            nativeBuildInputs = [ pkgs.makeWrapper  pkgs.desktop-file-utils];
+            nativeBuildInputs = [ pkgs.makeWrapper  pkgs.copyDesktopItems];
             buildInputs = [
               pkgs.electron
               #libuiohook dependencies
@@ -107,7 +107,6 @@
               runHook preInstall 
               mkdir -p $out/share/applications
 
-              cp exiled-exchange-2.desktop $out/share/applications/
               npm prune --omit=optional --omit=dev
               outdir="$out/lib/exiled-exchange-2" 
               mkdir -p "$outdir" "$out/bin" 
