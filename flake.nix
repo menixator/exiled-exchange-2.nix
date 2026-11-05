@@ -78,7 +78,7 @@
             env.NIX_CFLAGS_COMPILE = "-Wno-error=incompatible-pointer-types";
 
             env.dontPatchShebangs = 1;
-            nativeBuildInputs = [ pkgs.makeWrapper ];
+            nativeBuildInputs = [ pkgs.makeWrapper  pkgs.desktop-file-utils];
             buildInputs = [
               pkgs.electron
               #libuiohook dependencies
@@ -104,18 +104,21 @@
             # to: "."
             # override the installPhase.
             installPhase = ''
-               runHook preInstall 
-               npm prune --omit=optional --omit=dev
-               outdir="$out/lib/exiled-exchange-2" 
-               mkdir -p "$outdir" "$out/bin" 
+              runHook preInstall 
+              mkdir -p $out/share/applications
 
-               cp dist/main.js dist/vision.js "$outdir" 
+              cp exiled-exchange-2.desktop $out/share/applications/
+              npm prune --omit=optional --omit=dev
+              outdir="$out/lib/exiled-exchange-2" 
+              mkdir -p "$outdir" "$out/bin" 
 
-               substituteInPlace "package.json" \
-                 --replace-fail '"main": "dist/main.js"' '"main": "main.js"' 
-               cp package.json "$outdir" 
+              cp dist/main.js dist/vision.js "$outdir" 
 
-               cp -r ${renderer}/. "$outdir/"
+              substituteInPlace "package.json" \
+                --replace-fail '"main": "dist/main.js"' '"main": "main.js"' 
+              cp package.json "$outdir" 
+
+              cp -r ${renderer}/. "$outdir/"
 
               cp -r node_modules "$outdir/" 
 
